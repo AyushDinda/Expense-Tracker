@@ -14,6 +14,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "*",
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -21,8 +22,13 @@ app.use(
 
 app.use(express.json());
 
-connectDB(); 
+connectDB().then(() => {
+  console.log("DB Connected");
+}); 
 
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/income", incomeRoutes);
 app.use("/api/v1/expense", expenseRoutes);
